@@ -1,9 +1,7 @@
 
 import React, { useState, useRef } from "react"
 import { IoCloudUpload } from "react-icons/io5"
-
 import {MdDelete, MdFilePresent} from "react-icons/md"
-
 import { Stage, Layer,  Rect, Image,  Text } from "react-konva"
 import { Input } from '@headlessui/react'
 import { toast } from "react-toastify"; // Import Toastify

@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
+
 import { useState } from "react"
 import { toast } from "react-toastify"; // Import Toastify
 import { useNavigate } from "react-router-dom";
 
-const SignUpForm = ({addNewUser} ) => {
+const SignUpForm = ({addNewUser}) => {
 
-    const navigate = useNavigate()
+   const navigate = useNavigate()
 
 const [values, setValues] = useState({
     name: '',
@@ -15,22 +15,28 @@ const [values, setValues] = useState({
 })
 
 const handleChanges = (e) => {
-setValues({...values,[e.target.name]: [e.target.value]})
+  const { name, value } = e.target;
+  setValues({
+    ...values,
+    [name]: value // Update the correct field
+  });
 }
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault()
     
     
 
-    // eslint-disable-next-line no-unused-vars
+ 
     const newUser = {
         name: values.name,
         email: values.email,
         password: values.password,
      
     }
-    if(!newUser.name || !newUser.email || !newUser.password){
+
+    try {
+      if(!newUser.name || !newUser.email || !newUser.password){
         toast.error("Fill all entries!" , {
             position: "top-right",
             autoClose: 3000,
@@ -40,10 +46,27 @@ const handleSubmit = (e) => {
             draggable: true,
             theme: "colored",
           })
-    }
+    
+        }
+      await addNewUser(newUser)
+   
 
-    addNewUser(newUser)
-    return navigate('/home')
+    } catch (error) {
+      
+     
+        console.error("Error adding user:", error);
+
+    }
+ 
+
+
+     
+       return  navigate('/home')
+
+
+
+    
+    
 
 }
 
