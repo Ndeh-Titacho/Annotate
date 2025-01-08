@@ -10,7 +10,7 @@ const SignUpForm = ({addNewUser}) => {
 const [values, setValues] = useState({
     name: '',
     email: '',
-    password: '',
+    password: '',  
     
 })
 

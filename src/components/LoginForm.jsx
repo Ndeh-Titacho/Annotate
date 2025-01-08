@@ -1,25 +1,91 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 
-const SignupForm = () => {
 
-    
+const LoginForm = ({authenticateUser}) => {
+
+    const navigate = useNavigate()
 
     const [values, setValues] = useState({
       email: '',
       password: '',
-      confirmPassword:'',
+      confirmPassword:'', 
     })
 
     const handleChanges = (e) => {
-      setValues({...values, [e.target.name]: [e.target.value]})
+     const {name, value} = e.target
+     setValues({ ...values, [name]:value //updates the correct field
+      })
 
     }
 
-    const handleSubmit = (e) =>{
-
+    const handleSubmit = async (e) =>{
       e.preventDefault()
-      console.log(values)
+
+      const validUserDetails = {
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+
+      }
+      const authUserDetails = {
+        email: values.email,
+        password: values.password,
+        
+
+      }
+
+      if (validUserDetails.password !== validUserDetails.confirmPassword) {
+        toast.error("Passwords do not match!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+        });
+        return; // Stop the execution
+      }
+
+      if(!validUserDetails.email || !validUserDetails.password || !validUserDetails.confirmPassword){
+
+        toast.error("Fill all entries!" , {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+          })
+    return
+        }
+
+      try {
+
+        await authenticateUser(authUserDetails)
+        toast.success("Signup successful!", { theme: "colored" });
+        navigate('/home');
+
+            
+        
+      } catch (error) {
+        console.error('Error authenticating this User!',error)
+        toast.error("Error signing in. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+      });
+        
+      }
+
 
     }
 
@@ -56,13 +122,13 @@ const SignupForm = () => {
                 >Password</label
               >
               <input
-                type="text"
+                type="password"
                 placeholder="••••••••"
                 name="password"
                 id="password"
                
                 value={values.password}
-                onChange={(e)=>handleChanges(e)} required
+                onChange={handleChanges} required
                 className="w-full bg-slate-700 rounded-md md:py-2 pl-2 text-md border border-gray-500 sm: py-1 text-sm"
               />
             </div>
@@ -73,13 +139,13 @@ const SignupForm = () => {
                 >Confirm password</label
               >
               <input
-                type="text"
+                type="password"
                 placeholder="••••••••"
                 name="confirmPassword"
                 id="confirmPassword"
             
                 value={values.confirmPassword}
-                onChange={(e)=>handleChanges(e)} required
+                onChange={handleChanges}
                 className="w-full bg-slate-700 rounded-md md:py-2 pl-2 text-md border border-gray-500 sm:py-1 sm:text-sm"
               />
             </div>
@@ -123,4 +189,4 @@ const SignupForm = () => {
   )
 }
 
-export default SignupForm
+export default LoginForm
